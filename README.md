@@ -34,13 +34,41 @@ Where:
 
 ---
 
+### 2.2 Golden Cross Simulation Results
+
+We verified the Golden Cross hypothesis under the following hardware configuration:
+
+| Parameter | Value |
+| :--- | :---: |
+| Interconnect Bandwidth | 80 Gbps |
+| Data Size (Activation) | 10 MiB |
+| Compression Ratio ($r$) | 0.25 (FP16 → 4-bit) |
+| NPU Encode/Decode Speed | 50 GiB/s |
+
+| Metric | Value |
+| :--- | :---: |
+| $T_{raw}$ | 0.9766 ms |
+| $T_{tq}$ (Enc + Trans + Dec) | 0.6348 ms (0.1953 + 0.2441 + 0.1953) |
+| **End-to-end Speedup** | **1.54x** |
+| Golden Cross Achieved? | ✅ Yes |
+
+The compression tax (Enc + Dec: 0.39ms) is offset by a **4x reduction in 
+transmission time** (0.976ms → 0.244ms), confirming that TurboQuant crosses 
+the Golden Cross threshold under realistic NPU-accelerated conditions.
+
+> **Note:** As NPU encoding throughput scales beyond 200 GiB/s (a conservative 
+> target for next-generation silicon), the Enc+Dec overhead drops below 0.1ms, 
+> pushing the theoretical speedup toward **~2x**.
+
+---
+
 ## 3. Neuron-centric Architecture: The Strategic Edge
 The traditional "Matrix-based" approach treats all data with equal priority, leading to unnecessary information loss or bandwidth waste. Our simulation introduces the **Neuron-centric** approach, which prioritizes resources based on **Information Saliency** within the transformed domain.
 
 ### 3.1 Selective Quantization in the Rotation Domain
 Instead of selecting important neurons in the spatial domain, we apply a **Global Hadamard Rotation** first. This concentrates energy into specific coefficients, allowing us to:
 1. Assign **8-bit** precision to high-energy (High-Saliency) coefficients.
-2. Assign **4-bit** precision to the remaining background noise.
+2. Assign **4-bit** precision to the remaining low-energy coefficients.
 
 ### 3.2 Benchmark Results (Simulation)
 We compared the Neuron-centric approach against a **Uniform 5-bit Fair Baseline** to ensure that our gains weren't just from using more bits.
