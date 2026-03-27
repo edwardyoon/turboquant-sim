@@ -1,4 +1,4 @@
-import config  # * 대신 모듈 전체를 가져옵니다.
+import config
 from model import *
 from workload import generate_activation
 from quant import fake_quantize, fake_dequantize
@@ -8,7 +8,6 @@ import numpy as np
 def run():
     print("=== TurboQuant Simulation ===")
     
-    # config 모듈의 변수를 명시적으로 참조 (NameError 방지)
     # BANDWIDTH를 bps 단위에서 Gbps로 변환 (10e9 -> 10Gbps)
     bw_gbps = config.BANDWIDTH / 1e9
     # DATA_SIZE를 바이트 단위에서 GB로 변환 (100MB -> 0.1GB)
@@ -40,8 +39,8 @@ def run():
     x = generate_activation(1000000)
     
     # quant.py에서 수정된 scale 기반 양자화 로직 적용
-    compressed, scale = fake_quantize(x, config.COMPRESSION_RATIO, config.NOISE_LEVEL)
-    restored = fake_dequantize(compressed, scale, len(x))
+    compressed, meta = fake_quantize(x, config.COMPRESSION_RATIO, config.NOISE_LEVEL)
+    restored = fake_dequantize(compressed, meta, len(x))
 
     error = np.mean((x - restored) ** 2)
     

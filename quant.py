@@ -1,24 +1,49 @@
 import numpy as np
 
-def fake_quantize(x, ratio, noise_level):
-    # 실제 양자화 시뮬레이션: 데이터를 버리는 게 아니라 정밀도를 낮춤
-    # 16-bit -> 4-bit (ratio 0.25) 과정에서 발생하는 양자화 오차 재현
-    
-    # 1. 데이터의 스케일 계산 (Max-Abs Scaling)
-    scale = np.max(np.abs(x)) + 1e-9
-    
-    # 2. 양자화 레벨 설정 (4-bit일 경우 2^4 = 16레벨)
-    levels = 2 ** (16 * ratio) 
-    
-    # 3. 양자화 수행 (Normalize -> Quantize -> De-normalize)
-    quantized = np.round((x / scale) * (levels / 2)) / (levels / 2) * scale
-    
-    # 4. 통신 노이즈 추가
-    noise = np.random.normal(0, noise_level, size=x.shape)
-    compressed = quantized + noise
-    
-    return compressed, scale # indices 대신 scale을 반환
+def fwht(a):
+    """정규화된 Walsh-Hadamard Transform (self-inverse)"""
+    n = len(a)
+    assert (n & (n - 1)) == 0, "Length must be power of 2"
+    a = a.copy().astype(np.float64)
+    d = 1
+    while d < n:
+        a = a.reshape(-1, 2 * d)
+        x, y = a[:, :d].copy(), a[:, d:].copy()
+        a[:, :d] = x + y
+        a[:, d:] = x - y
+        d *= 2
+    return a.reshape(-1) / np.sqrt(n)
 
-def fake_dequantize(compressed, scale, original_size):
-    # 양자화된 데이터를 그대로 복원 (이미 x.shape와 같으므로)
-    return compressed
+# comparison.py에서 import하는 이름
+fwht_vectorized = fwht
+
+def quantize_to_bits(x, bits):
+    levels = 2 ** bits
+    scale  = np.max(np.abs(x)) + 1e-9
+    x_int  = np.round(x / scale * (levels / 2)).clip(-levels / 2, levels / 2 - 1)
+    x_deq  = x_int / (levels / 2) * scale
+    return x_deq, scale
+
+def fake_quantize(x, bits, noise_level=0.0):
+    n         = len(x)
+    next_pow2 = 1 << (n - 1).bit_length()
+    x_padded  = np.pad(x, (0, next_pow2 - n))
+
+    mean_val  = np.mean(x_padded)
+    x_centered = x_padded - mean_val
+    x_rotated  = fwht(x_centered)
+
+    x_quantized, scale = quantize_to_bits(x_rotated, bits)
+
+    noise   = np.random.normal(0, noise_level * scale, size=x_quantized.shape)
+    x_noisy = x_quantized + noise
+
+    meta = {'scale': scale, 'mean': mean_val, 'n_orig': n, 'n_pad': next_pow2}
+    return x_noisy, meta
+
+def fake_dequantize(compressed, meta):
+    # fwht는 self-inverse이므로 한 번 더 적용하면 원본 복원
+    restored_centered = fwht(compressed)
+
+    restored_padded = restored_centered + meta['mean']
+    return restored_padded[:meta['n_orig']]
