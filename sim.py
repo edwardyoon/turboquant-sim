@@ -1,4 +1,4 @@
-from config import *
+import config  # * 대신 모듈 전체를 가져옵니다.
 from model import *
 from workload import generate_activation
 from quant import fake_quantize, fake_dequantize
@@ -8,30 +8,30 @@ import numpy as np
 def run():
     print("=== TurboQuant Simulation ===")
     
-    # Config 요약 출력 (README의 예시와 매칭)
-    # BANDWIDTH를 bps 단위에서 Gbps로 변환하여 표시 (예: 100e9 -> 100Gbps)
-    bw_gbps = BANDWIDTH / 1e9
-    # DATA_SIZE를 바이트 단위에서 GB로 변환 (예: 1e9 -> 1GB)
-    data_gb = DATA_SIZE / 1e9
-    print(f"Config: BW={bw_gbps:.0f}Gbps, Data={data_gb:.0f}GB, Ratio={COMPRESSION_RATIO} ({int(16*COMPRESSION_RATIO)}-bit)")
+    # config 모듈의 변수를 명시적으로 참조 (NameError 방지)
+    # BANDWIDTH를 bps 단위에서 Gbps로 변환 (10e9 -> 10Gbps)
+    bw_gbps = config.BANDWIDTH / 1e9
+    # DATA_SIZE를 바이트 단위에서 GB로 변환 (100MB -> 0.1GB)
+    data_gb = config.DATA_SIZE / 1e9
+    
+    print(f"Config: BW={bw_gbps:.0f}Gbps, Data={data_gb:.2f}GB, Ratio={config.COMPRESSION_RATIO} ({int(16*config.COMPRESSION_RATIO)}-bit)")
     print()
 
     # latency 비교
     is_better, raw, tq = golden_cross(
-        DATA_SIZE,
-        BANDWIDTH,
-        COMPRESSION_RATIO,
-        ENCODE_SPEED,
-        DECODE_SPEED
+        config.DATA_SIZE,
+        config.BANDWIDTH,
+        config.COMPRESSION_RATIO,
+        config.ENCODE_SPEED,
+        config.DECODE_SPEED
     )
     
-    # 세부 시간 계산 (README 출력용)
-    t_enc = DATA_SIZE / ENCODE_SPEED
-    t_trans = (DATA_SIZE * COMPRESSION_RATIO) / BANDWIDTH
-    t_dec = DATA_SIZE / DECODE_SPEED
+    # 세부 시간 계산
+    t_enc = config.DATA_SIZE / config.ENCODE_SPEED
+    t_trans = (config.DATA_SIZE * config.COMPRESSION_RATIO) / config.BANDWIDTH
+    t_dec = config.DATA_SIZE / config.DECODE_SPEED
 
     print(f"Raw transfer time: {raw:.6f} sec")
-    # 전체 TQ 시간 뒤에 세부 지표(Enc, Trans, Dec) 추가
     print(f"TurboQuant time: {tq:.6f} sec (Enc: {t_enc:.3f}s, Trans: {t_trans:.3f}s, Dec: {t_dec:.3f}s)")
     print(f"TurboQuant wins? {is_better}")
     print()
@@ -39,9 +39,10 @@ def run():
     # accuracy 테스트
     x = generate_activation(1000000)
     
-    compressed, idx = fake_quantize(x, COMPRESSION_RATIO, NOISE_LEVEL)
-    restored = fake_dequantize(compressed, idx, len(x))
-    
+    # quant.py에서 수정된 scale 기반 양자화 로직 적용
+    compressed, scale = fake_quantize(x, config.COMPRESSION_RATIO, config.NOISE_LEVEL)
+    restored = fake_dequantize(compressed, scale, len(x))
+
     error = np.mean((x - restored) ** 2)
     
     print(f"Reconstruction MSE: {error:.6f}")

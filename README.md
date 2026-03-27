@@ -58,3 +58,15 @@ This simulation suggests that, under conditions where the **Golden Cross** is ac
 git clone [https://github.com/edwardyoon/turboquant-sim.git](https://github.com/edwardyoon/turboquant-sim.git)
 cd turboquant-sim
 pip install -r requirements.txt
+
+### Validated Simulation Results
+```text
+=== TurboQuant Simulation ===
+Config: BW=11Gbps, Data=0.10GB, Ratio=0.25 (4-bit)
+
+Raw transfer time: 0.009766 sec
+TurboQuant time: 0.006348 sec (Enc: 0.002s, Trans: 0.002s, Dec: 0.002s)
+TurboQuant wins? True
+
+Reconstruction MSE: 0.030087
+
