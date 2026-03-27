@@ -8,7 +8,7 @@
 ---
 
 ## 1. Overview
-In the era of distributed AI clusters (e.g., NVIDIA Vera Rubin, Google TPU clusters), the primary bottleneck has shifted from raw computation to **Inter-node Boundary Communication**. This project provides a high-fidelity simulation to verify whether a compression-based interconnect protocol—**TurboQuant (TQ)**—can reduce end-to-end latency in distributed inference systems.
+In the era of massive-scale distributed AI clusters (e.g., NVIDIA Vera Rubin, Google TPU), the primary bottleneck has shifted from raw computation to Inter-node Boundary Communication. This project provides a high-fidelity simulation to verify TurboQuant (TQ)—a high-density interconnect protocol designed to break the "Memory Wall" by optimizing data transmission efficiency in distributed inference systems.
 
 The core thesis is that **Communication Density** beats **Memory Capacity**.
 
