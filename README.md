@@ -62,7 +62,7 @@ pip install -r requirements.txt
 ### Validated Simulation Results
 ```
 
-=== TurboQuant Simulation ===
+### TurboQuant Simulation
 
 1. **The 1:1:1 Balance:** The simulation shows a perfect equilibrium between Encoding ($0.002s$), Transfer ($0.002s$), and Decoding ($0.002s$). This proves that with a **50GB/s NPU accelerator**, we can neutralize the computational "tax" of quantization and achieve a net speedup.
 2. **35% Latency Reduction:** By thinning the data to 4-bit, we achieved a **~35% faster** end-to-end response compared to raw FP16 transfer. This is equivalent to upgrading a physical interconnect without changing a single cable.
