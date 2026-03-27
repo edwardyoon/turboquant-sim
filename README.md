@@ -39,11 +39,13 @@ This simulator evaluates the feasibility of TurboQuant across three critical dim
 2.  **Computational Tax:** The required throughput ($E/D_{ec}$) for NPU/TPU systolic arrays to make TQ viable.
 3.  **Information Fidelity:** The trade-off between aggressive compression ($r$) and reconstruction error (MSE), ensuring the model's accuracy remains within acceptable bounds.
 
-## 4. Why This Matters: The End of HBM Dominance
-As proven by this simulation, if we can reach the **Golden Cross** via hardware-accelerated quantization:
-* **Logical Bandwidth** expands by $4\times$ to $8\times$ without upgrading physical cables.
-* **HBM Capacity** demand is halved, as KV caches and activations occupy significantly less memory footprint.
-* **SRAM-Centric Execution** becomes possible, keeping massive subgraphs on-chip and bypassing the Memory Wall.
+## 4. Rethinking the Role of HBM in Distributed Inference
+
+This simulation suggests that, under conditions where the **Golden Cross** is achieved via hardware-accelerated quantization, the following architectural shifts may become feasible:
+
+* **Logical Bandwidth Expansion:** Effective bandwidth can increase by $4\times$ to $8\times$, depending on the compression ratio ($r$), without requiring physical interconnect upgrades.
+* **Reduced HBM Pressure:** The memory footprint of KV caches and activations can be significantly reduced, lowering the demand for high-capacity HBM.
+* **Towards SRAM-Centric Execution:** With sufficiently dense representations, larger subgraphs may remain on-chip, potentially mitigating memory wall effects at inter-node boundaries.
 
 ## 5. Usage
 
