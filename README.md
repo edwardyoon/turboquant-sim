@@ -47,22 +47,7 @@ This simulation suggests that, under conditions where the **Golden Cross** is ac
 * **Reduced HBM Pressure:** The memory footprint of KV caches and activations can be significantly reduced, lowering the demand for high-capacity HBM.
 * **Towards SRAM-Centric Execution:** With sufficiently dense representations, larger subgraphs may remain on-chip, potentially mitigating memory wall effects at inter-node boundaries.
 
-## 5. Usage
-
-### Prerequisites
-* Python 3.8+
-* NumPy
-
-### Installation
-```bash
-git clone [https://github.com/edwardyoon/turboquant-sim.git](https://github.com/edwardyoon/turboquant-sim.git)
-cd turboquant-sim
-pip install -r requirements.txt
-
-### Validated Simulation Results
-```
-
-### TurboQuant Simulation
+### 5. TurboQuant Simulation
 
 1. **The 1:1:1 Balance:** The simulation shows a perfect equilibrium between Encoding ($0.002s$), Transfer ($0.002s$), and Decoding ($0.002s$). This proves that with a **50GB/s NPU accelerator**, we can neutralize the computational "tax" of quantization and achieve a net speedup.
 2. **35% Latency Reduction:** By thinning the data to 4-bit, we achieved a **~35% faster** end-to-end response compared to raw FP16 transfer. This is equivalent to upgrading a physical interconnect without changing a single cable.
