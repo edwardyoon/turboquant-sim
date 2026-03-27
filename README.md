@@ -1,6 +1,12 @@
 # TurboQuant Simulator (Concept Proof)
 > **Solving the Memory Wall: Verifying High-Density Interconnect Protocols for Modern DistBelief**
 
+### 🔗 Related Articles
+* **Vol. 1: The Revival of Distributed Computing** [https://edwardyoon.github.io/the-revival-of-distributed-computing/](https://edwardyoon.github.io/the-revival-of-distributed-computing/)
+* **Vol. 2: TurboQuant: The High-Density Interconnect Protocol** [https://edwardyoon.github.io/turboquant-the-high-density-interconnect-protocol/](https://edwardyoon.github.io/turboquant-the-high-density-interconnect-protocol/)
+
+---
+
 ## 1. Overview
 In the era of distributed AI clusters (e.g., NVIDIA Vera Rubin, Google TPU clusters), the primary bottleneck has shifted from raw computation to **Inter-node Boundary Communication**. This project provides a high-fidelity simulation to verify whether a compression-based interconnect protocol—**TurboQuant (TQ)**—can reduce end-to-end latency in distributed inference systems.
 
