@@ -1,6 +1,8 @@
 # TurboQuant Simulator (Concept Proof)
 > **Solving the Memory Wall: Verifying High-Density Interconnect Protocols for Modern DistBelief**
 
+### Key Message: *Instead of trying to reduce calculations, try to make the data itself more 'valuable'*
+
 ### 🔗 Related Articles
 * **Vol. 1: The Revival of Distributed Computing** [https://edwardyoon.github.io/the-revival-of-distributed-computing/](https://edwardyoon.github.io/the-revival-of-distributed-computing/)
 * **Vol. 2: TurboQuant: The High-Density Interconnect Protocol** [https://edwardyoon.github.io/turboquant-the-high-density-interconnect-protocol/](https://edwardyoon.github.io/turboquant-the-high-density-interconnect-protocol/)
